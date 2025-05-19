@@ -9,6 +9,7 @@ export interface Employee {
 
 // User Interfaces
 export interface AuthInfo {
+    id:number,
     email: string;
     password: string;
 }

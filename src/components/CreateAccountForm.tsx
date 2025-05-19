@@ -8,6 +8,7 @@ import { createUser } from '@/lib/services/user-services';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { AiOutlineLoading } from "react-icons/ai";
+import { AuthInfo } from '@/lib/interfaces/interfaces'
 
 const CreateAccountForm = () => {
   const { push } = useRouter();
@@ -33,10 +34,12 @@ const CreateAccountForm = () => {
     setCreatingAccount(true);
 
     try {
-      const newUser = { id: 0, email: user.email, password: user.password };
-
+      const newUser:AuthInfo = { id: 0, email: user.email, password: user.password };
+      console.log(newUser)
+      // await createUser(newUser)
       if (await createUser(newUser)) {
         push("/login");
+        // console.log(1)
       } else {
         setCreationError(true);
       }

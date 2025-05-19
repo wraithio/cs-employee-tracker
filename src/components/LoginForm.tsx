@@ -15,7 +15,7 @@ const LoginForm = () => {
     const { push } = useRouter();
     const { isLoggedIn, setIsLoggedIn } = useLoginContext();
 
-    const [user, setUser] = useState({ email: "", password: "" });
+    const [user, setUser] = useState({id:0, email: "", password: "" });
     const [rememberMe, setRememberMe] = useState(false);
     const [loginError, setLoginError] = useState(false);
     const [loggingIn, setLoggingIn] = useState(false);
@@ -25,13 +25,15 @@ const LoginForm = () => {
     const changeUser = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUser({
             ...user,
-            [event.target.id]: '',
+            [event.target.id]: event.target.value.trim(),
         });
 
         if (loginError) {
             setLoginError(false);
         }
     };
+
+    
 
     const handleLogin = async () => {
         setLoggingIn(true);

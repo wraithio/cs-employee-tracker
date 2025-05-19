@@ -29,7 +29,7 @@ export const LoginProvider = ({ children }: { children: React.ReactNode }) => {
     }, [])
 
     return (
-        <LoginContext.Provider value={ { isLoggedIn, setIsLoggedIn } } />
+        <LoginContext.Provider value={ { isLoggedIn, setIsLoggedIn } } >{children}</LoginContext.Provider>
     )
 }
 

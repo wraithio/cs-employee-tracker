@@ -9,7 +9,7 @@ const login = async (loginInfo: AuthInfo, rememberMe: boolean) => {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ ...loginInfo }),
+        body: JSON.stringify(loginInfo),
         cache: 'no-cache'
     });
 
@@ -35,7 +35,7 @@ const login = async (loginInfo: AuthInfo, rememberMe: boolean) => {
 }
 
 const createUser = async (user: AuthInfo) => {
-    const response = await fetch(`${baseURL}Login`, {
+    const response = await fetch(`${baseURL}CreateUser`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

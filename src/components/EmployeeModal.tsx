@@ -131,10 +131,10 @@ const EmployeeModal = ({ type, employee, refreshEmployees }: { type: 'Add' | 'Ed
                 {/* <Button variant="outline">Edit Profile</Button> */}
                 <Button
                     color="success"
-                    className={type === "Add" ? "flex items-center gap-1" : ""}
+                    className={type === "Add" ? "flex items-center gap-1 cursor-pointer" : "cursor-pointer"}
                     onClick={onOpenModal}
                 >
-                    {type === "Add" ? <FaPlus className="mt-[0.2rem]" /> : "Edit"}
+                    {type === "Add" ? <FaPlus className="mt-[0.2rem] cursor-pointer" /> : "Edit"}
                 </Button>
             </DialogTrigger>
             <DialogContent className='w-[40rem]'>
