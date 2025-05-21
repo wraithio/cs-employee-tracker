@@ -21,15 +21,25 @@ import {
   Table,
 } from "./ui/table";
 import EmployeeModal from "./EmployeeModal";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const EmployeeTable = () => {
   const { push } = useRouter();
 
   // useStates
   const [employees, setEmployees] = useState<Employee[]>([]);
-  // const [filteredemployees, setfilteredEmployees] = useState<Employee[]>([]);
   const [sortedEmployees, setSortedEmployees] = useState<Employee[]>([]);
-
+  const [splicedEmployees, setSplicedEmployees] = useState<Employee[][]>([]);
+  const [displayedEmployees, setDisplayedEmployees] = useState<Employee[]>([]);
+  const [employeeNumber, setEmployeeNumber] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
   const [token, setToken] = useState("");
 
   const [sortBy, setSortBy] = useState("name");
@@ -39,14 +49,14 @@ const EmployeeTable = () => {
   // Function to get employees
   const handleGetEmployees = async () => {
     try {
-      const result: Employee[] | "Not Authorized" = await getEmployees(token);
+      const result: Employee[] = await getEmployees(token);
       // const result: Employee[] | "Not Authorized" = [];
       if (result.toString() === "Not Authorized") {
         localStorage.setItem("Not Authorized", "true");
         push("/login");
       }
-
-      setEmployees(result as Employee[]);
+      setEmployeeNumber(result.length);
+      setEmployees(result);
     } catch (error) {
       console.log("error", error);
     }
@@ -102,22 +112,24 @@ const EmployeeTable = () => {
   useEffect(() => {
     if (token !== "") {
       handleGetEmployees();
+      // console.log("Employees", employees);
+      // console.log("Token", token);
     }
   }, [token]);
 
   const handleSorting = (e: Employee[]) => {
-    console.log(sortBy);
-    console.log(sortByJob);
+    // console.log(sortBy);
+    console.log("unsorted", e);
+
     switch (sortBy) {
       case "name": {
-        e.sort((a: Employee, b: Employee) => a.name.localeCompare(b.name));
         console.log(2);
+        e.sort((a: Employee, b: Employee) => a.name.localeCompare(b.name));
         break;
       }
       case "name-reverse": {
-        e.sort((a: Employee, b: Employee) => b.name.localeCompare(a.name));
         console.log(3);
-        // setEmployees(e);
+        e.sort((a: Employee, b: Employee) => b.name.localeCompare(a.name));
         break;
       }
       case "hire-date": {
@@ -135,43 +147,40 @@ const EmployeeTable = () => {
         break;
       }
       default: {
+        console.log(4);
         // e.sort((a: Employee, b: Employee) => a.id - b.id);
         break;
       }
     }
-    // setSortedEmployees(e);
-    switch (sortByJob) {
-      case "Job Title": {
-        console.log(6);
-        break;
-      }
-      case "Customer Support": {
-        e.filter((employee: Employee) => employee.jobTitle == sortByJob);
-        break;
-      }
-      case "IT Support Specialist": {
-        e.filter((employee: Employee) => employee.jobTitle == sortByJob);
-        break;
-      }
-      case "Software Engineer": {
-        e.filter((employee: Employee) => employee.jobTitle == sortByJob);
-        break;
-      }
-      default: {
-        // e.sort((a: Employee, b: Employee) => a.id - b.id);
-        break;
-      }
-    }
+
+    if (sortBy != "Job Title")
+      e.filter((employee: Employee) => employee.jobTitle == sortByJob);
     setSortedEmployees(e);
   };
 
   // Sorting the employees
   useEffect(() => {
     // const sortingEmployees = employees;
-
+    // setSortedEmployees(employees);
     handleSorting(employees);
-    // console.log(1);
+    // console.log("Sorted Employees", sortedEmployees);
   }, [employees, sortBy, sortByJob]);
+
+  useEffect(() => {
+    console.log("sorted", sortedEmployees);
+    const substring = [];
+    for (let i = 0; i < sortedEmployees.length; i += 3) {
+      substring.push(sortedEmployees.slice(i, i + 3));
+    }
+    setSplicedEmployees(substring);
+    console.log("spliced", substring);
+    setDisplayedEmployees(substring[0]);
+  }, [sortedEmployees]);
+
+  const setPage = (page: number) => {
+    setPageNumber(page + 1);
+    setDisplayedEmployees(splicedEmployees[page]);
+  };
 
   return (
     <>
@@ -293,6 +302,12 @@ const EmployeeTable = () => {
       {/* Sort by - End */}
 
       {/* Display table - Start */}
+      <h3 className="text-base ms-2">
+        {`Showing ${(pageNumber - 1) * 3 + 1} - ${Math.min(
+          pageNumber * 3,
+          sortedEmployees.length
+        )}`}
+      </h3>
       <Table>
         <TableHeader>
           <TableRow>
@@ -303,28 +318,28 @@ const EmployeeTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedEmployees.length === 0 ? (
+          {!displayedEmployees ? (
             <TableRow>
               <TableCell></TableCell>
               <TableCell className="text-center">No Employees</TableCell>
               <TableCell></TableCell>
             </TableRow>
           ) : (
-            sortedEmployees.map((employee, idx) => (
+            displayedEmployees.map((entry: Employee, idx) => (
               <TableRow key={idx}>
-                <TableCell className="font-medium">{employee.name}</TableCell>
-                <TableCell>{employee.jobTitle}</TableCell>
-                <TableCell>{employee.hireDate}</TableCell>
+                <TableCell className="font-medium">{entry.name}</TableCell>
+                <TableCell>{entry.jobTitle}</TableCell>
+                <TableCell>{entry.hireDate}</TableCell>
                 <TableCell className="flex gap-3 justify-end">
                   <EmployeeModal
                     type="Edit"
-                    employee={employee}
+                    employee={entry}
                     refreshEmployees={handleGetEmployees}
                   />
                   <Button
                     className="cursor-pointer"
                     variant="destructive"
-                    onClick={() => handleDeleteEmployee(employee.id)}
+                    onClick={() => handleDeleteEmployee(entry.id)}
                   >
                     Delete
                   </Button>
@@ -334,6 +349,26 @@ const EmployeeTable = () => {
           )}
         </TableBody>
       </Table>
+      <Pagination className={sortedEmployees.length === 0 ? "hidden" : ""}>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          {Array.from({ length: Math.ceil(employeeNumber / 3) }).map((_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
+                className="cursor-pointer"
+                onClick={() => setPage(i)}
+              >
+                <p>{i + 1}</p>
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
       {/* Display table - End */}
     </>
   );

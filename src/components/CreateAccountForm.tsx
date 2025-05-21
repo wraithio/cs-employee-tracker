@@ -1,14 +1,14 @@
-'use client'
+"use client";
 
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import Link from 'next/link'
-import { createUser } from '@/lib/services/user-services';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import Link from "next/link";
+import { createUser, login } from "@/lib/services/user-services";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
-import { AuthInfo } from '@/lib/interfaces/interfaces'
+import { AuthInfo } from "@/lib/interfaces/interfaces";
 
 const CreateAccountForm = () => {
   const { push } = useRouter();
@@ -34,11 +34,16 @@ const CreateAccountForm = () => {
     setCreatingAccount(true);
 
     try {
-      const newUser:AuthInfo = { id: 0, email: user.email, password: user.password };
-      console.log(newUser)
+      const newUser: AuthInfo = {
+        id: 0,
+        email: user.email,
+        password: user.password,
+      };
+      console.log(newUser);
       // await createUser(newUser)
       if (await createUser(newUser)) {
-        push("/login");
+        await login(newUser, false);
+        push("/employees");
         // console.log(1)
       } else {
         setCreationError(true);
@@ -68,20 +73,19 @@ const CreateAccountForm = () => {
           required
           value={user.email}
           onChange={changeUser}
-          color={creationError ? 'failure' : ''}
+          color={creationError ? "failure" : ""}
           className={creationError ? "border-red-500" : ""}
         />
-        {
-          creationError && (
-            <p className="text-red-500 text-sm"><span className='font-medium'>Oops!</span> Email may already be in use.</p>
-          )
-        }
+        {creationError && (
+          <p className="text-red-500 text-sm">
+            <span className="font-medium">Oops!</span> Email may already be in
+            use.
+          </p>
+        )}
       </div>
       <div>
-        <div className='mb-2 block'>
-          <Label htmlFor="password">
-            Your password
-          </Label>
+        <div className="mb-2 block">
+          <Label htmlFor="password">Your password</Label>
         </div>
         <Input
           id="password"
@@ -112,7 +116,7 @@ const CreateAccountForm = () => {
         </Link>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default CreateAccountForm
+export default CreateAccountForm;
