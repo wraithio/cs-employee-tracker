@@ -44,6 +44,8 @@ const EmployeeModal = ({
     name: "",
     jobTitle: "",
     hireDate: "",
+    details: "",
+    status: "",
   });
 
   const [token, setToken] = useState("");
@@ -63,7 +65,14 @@ const EmployeeModal = ({
 
   const onCloseModal = () => {
     setOpenModal(false);
-    setEmployeeToChange({ id: 0, name: "", jobTitle: "", hireDate: "" });
+    setEmployeeToChange({
+      id: 0,
+      name: "",
+      jobTitle: "",
+      hireDate: "",
+      details: "",
+      status: "",
+    });
   };
 
   // Change employee functions
@@ -125,6 +134,8 @@ const EmployeeModal = ({
         name: "",
         jobTitle: "",
         hireDate: "",
+        details: "",
+        status: "",
       });
     } catch (error) {
       console.log("error", error);
@@ -196,7 +207,9 @@ const EmployeeModal = ({
                     variant="outline"
                     className="text-sm cursor-pointer text-gray-600"
                   >
-                    {sortByJob === "--please select--" ? employeeToChange.jobTitle : sortByJob}
+                    {sortByJob === "--please select--"
+                      ? employeeToChange.jobTitle
+                      : sortByJob}
                     {/* {sortBy === "hire-date" ? (
                                     <FaCaretDown className="ml-2" />
                                   ) : sortBy === "hire-date-reverse" ? (
