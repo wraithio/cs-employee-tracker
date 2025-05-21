@@ -44,7 +44,6 @@ const EmployeeTable = () => {
 
   const [sortBy, setSortBy] = useState("name");
   const [sortByJob, setSortByJob] = useState("Job Title");
-  // const [sortByJob, setSortByJob] = useState("");
 
   // Function to get employees
   const handleGetEmployees = async () => {
@@ -118,17 +117,15 @@ const EmployeeTable = () => {
   }, [token]);
 
   const handleSorting = (e: Employee[]) => {
-    // console.log(sortBy);
+    // console.log(sortByJob);
     console.log("unsorted", e);
 
     switch (sortBy) {
       case "name": {
-        console.log(2);
         e.sort((a: Employee, b: Employee) => a.name.localeCompare(b.name));
         break;
       }
       case "name-reverse": {
-        console.log(3);
         e.sort((a: Employee, b: Employee) => b.name.localeCompare(a.name));
         break;
       }
@@ -153,8 +150,15 @@ const EmployeeTable = () => {
       }
     }
 
-    if (sortBy != "Job Title")
-      e.filter((employee: Employee) => employee.jobTitle == sortByJob);
+    if (sortByJob !== "Job Title"){
+      console.log(e.filter((employee: Employee) => employee.jobTitle === sortByJob))
+      // e.filter((employee: Employee) => employee.jobTitle === sortByJob)
+      setSortedEmployees(e.filter((employee: Employee) => employee.jobTitle === sortByJob))
+      return;
+    }
+    console.log("sorted", e);
+    // console.log("original", employees);
+
     setSortedEmployees(e);
   };
 
@@ -162,12 +166,13 @@ const EmployeeTable = () => {
   useEffect(() => {
     // const sortingEmployees = employees;
     // setSortedEmployees(employees);
-    handleSorting(employees);
+    const editing = [...employees];
+    handleSorting(editing);
     // console.log("Sorted Employees", sortedEmployees);
   }, [employees, sortBy, sortByJob]);
 
   useEffect(() => {
-    console.log("sorted", sortedEmployees);
+    console.log("splicing...");
     const substring = [];
     for (let i = 0; i < sortedEmployees.length; i += 3) {
       substring.push(sortedEmployees.slice(i, i + 3));
@@ -208,11 +213,13 @@ const EmployeeTable = () => {
                 className="cursor-pointer text-sm text-gray-600"
               >
                 Name
-                {sortBy == "name" ? (
-                  <FaCaretDown className="ml-2" />
-                ) : (
-                  <FaCaretUp className="ml-2" />
-                )}
+                {
+                  sortBy === "name" ? (
+                    <FaCaretDown className="ml-2" />
+                  ) : sortBy === "name-reverse" ? (
+                    <FaCaretUp className="ml-2" />
+                  ) : null
+                }
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -269,15 +276,15 @@ const EmployeeTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setSortBy("Customer Support")}>
+              <DropdownMenuItem onClick={() => setSortByJob("Customer Support")}>
                 Customer Support
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setSortBy("IT Support Specialist")}
+                onClick={() => setSortByJob("IT Support Specialist")}
               >
                 IT Support Specialist
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortBy("Software Engineer")}>
+              <DropdownMenuItem onClick={() => setSortByJob("Software Engineer")}>
                 Software Engineer
               </DropdownMenuItem>
             </DropdownMenuContent>
