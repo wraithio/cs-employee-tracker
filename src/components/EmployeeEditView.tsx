@@ -7,20 +7,22 @@ import { Input } from './ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { cn } from '@/lib/utils'
-import { CalendarIcon, Calendar } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
+// Import a calendar/date picker component, e.g. from 'react-date-picker' or 'react-day-picker'
+import { Calendar } from '@/components/ui/calendar'
 
 const EmployeeEditView = ({ employee, setEdit }: { employee: Employee, setEdit: (value: boolean) => void }) => {
-
+    const [details, setDetails] = React.useState<string>("")
     return (
         <>
             <div>
                 <p className="text-sm font-semibold">Job Title</p>
-                <Input value={employee.jobTitle} />
+                {/* <Input value={employee.jobTitle} onChange={}/> */}
             </div>
 
             <div>
                 <p className="text-sm font-semibold">Details</p>
-                <Input value={employee.details || ""} />
+                <Input value={employee.details || ""} onChange={(e) => setDetails(e.target.value)}/>
             </div>
 
             <div>
@@ -51,14 +53,13 @@ const EmployeeEditView = ({ employee, setEdit }: { employee: Employee, setEdit: 
                                     <CalendarIcon />
                                     <span>Pick a date</span>
                                 </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
                                 <Calendar
                                     mode="single"
-                                    selected={new Date()}
+                                    selected={new Date(employee.hireDate)}
                                     initialFocus
                                 />
-                            </PopoverContent>
+                                  
+                            </PopoverTrigger>
                         </Popover>
             </div>
 

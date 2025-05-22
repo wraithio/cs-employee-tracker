@@ -29,12 +29,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { useAppContext } from '@/lib/context/context';
+import { useAppContext } from "@/lib/context/context";
 
 const EmployeeTable = () => {
-    const { push } = useRouter();
+  const { push } = useRouter();
 
-    const { setEmployeeId } = useAppContext();
+  const { setEmployeeId } = useAppContext();
 
   // useStates
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -85,22 +85,22 @@ const EmployeeTable = () => {
     setSortByJob(e.target.value);
   };
 
-    // Delete employee
-    const handleDeleteEmployee = async (id: number) => {
-        try {
-            if (await deleteEmployee(token, id)) {
-                await handleGetEmployees();
-            }
-        } catch (error) {
-            console.log("error", error);
-        }
-    };
+  // Delete employee
+  const handleDeleteEmployee = async (id: number) => {
+    try {
+      if (await deleteEmployee(token, id)) {
+        await handleGetEmployees();
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
-    const handleViewEmployee = async (id: number) => {
-        await setEmployeeId(id);
+  const handleViewEmployee = async (id: number) => {
+    await setEmployeeId(id);
 
-        push('/employee-page');
-    };
+    push(`/employee-page/${id}`);
+  };
 
   // Getting the user token from storage
   useEffect(() => {
@@ -159,10 +159,14 @@ const EmployeeTable = () => {
       }
     }
 
-    if (sortByJob !== "Job Title"){
-      console.log(e.filter((employee: Employee) => employee.jobTitle === sortByJob))
+    if (sortByJob !== "Job Title") {
+      console.log(
+        e.filter((employee: Employee) => employee.jobTitle === sortByJob)
+      );
       // e.filter((employee: Employee) => employee.jobTitle === sortByJob)
-      setSortedEmployees(e.filter((employee: Employee) => employee.jobTitle === sortByJob))
+      setSortedEmployees(
+        e.filter((employee: Employee) => employee.jobTitle === sortByJob)
+      );
       return;
     }
     console.log("sorted", e);
@@ -192,8 +196,8 @@ const EmployeeTable = () => {
   }, [sortedEmployees]);
 
   const setPage = (page: number) => {
-    setPageNumber(page + 1);
-    setDisplayedEmployees(splicedEmployees[page]);
+    setPageNumber(page);
+    setDisplayedEmployees(splicedEmployees[page - 1]);
   };
 
   return (
@@ -222,13 +226,11 @@ const EmployeeTable = () => {
                 className="cursor-pointer text-sm text-gray-600"
               >
                 Name
-                {
-                  sortBy === "name" ? (
-                    <FaCaretDown className="ml-2" />
-                  ) : sortBy === "name-reverse" ? (
-                    <FaCaretUp className="ml-2" />
-                  ) : null
-                }
+                {sortBy === "name" ? (
+                  <FaCaretDown className="ml-2" />
+                ) : sortBy === "name-reverse" ? (
+                  <FaCaretUp className="ml-2" />
+                ) : null}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -285,7 +287,9 @@ const EmployeeTable = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setSortByJob("Customer Support")}>
+              <DropdownMenuItem
+                onClick={() => setSortByJob("Customer Support")}
+              >
                 Customer Support
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -293,7 +297,9 @@ const EmployeeTable = () => {
               >
                 IT Support Specialist
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortByJob("Software Engineer")}>
+              <DropdownMenuItem
+                onClick={() => setSortByJob("Software Engineer")}
+              >
                 Software Engineer
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -347,6 +353,12 @@ const EmployeeTable = () => {
                 <TableCell>{entry.jobTitle}</TableCell>
                 <TableCell>{entry.hireDate}</TableCell>
                 <TableCell className="flex gap-3 justify-end">
+                  <Button
+                    className="cursor-pointer"
+                    onClick={() => handleViewEmployee(entry.id)}
+                  >
+                    View
+                  </Button>
                   <EmployeeModal
                     type="Edit"
                     employee={entry}
@@ -368,20 +380,29 @@ const EmployeeTable = () => {
       <Pagination className={sortedEmployees.length === 0 ? "hidden" : ""}>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <button className="cursor-pointer" disabled={pageNumber === 1}>
+              <PaginationPrevious onClick={() => setPage(pageNumber - 1)} />
+            </button>
           </PaginationItem>
           {Array.from({ length: Math.ceil(employeeNumber / 3) }).map((_, i) => (
             <PaginationItem key={i}>
               <PaginationLink
-                className="cursor-pointer"
-                onClick={() => setPage(i)}
+                className={`cursor-pointer ${
+                  pageNumber === i + 1 ? "bg-slate-900 text-white" : ""
+                }`}
+                onClick={() => setPage(i + 1)}
               >
                 <p>{i + 1}</p>
               </PaginationLink>
             </PaginationItem>
           ))}
           <PaginationItem>
-            <PaginationNext href="#" />
+            <button
+              className="cursor-pointer"
+              disabled={pageNumber === Math.floor(employeeNumber / 3)}
+            >
+              <PaginationNext onClick={() => setPage(pageNumber + 1)} />
+            </button>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

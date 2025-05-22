@@ -36,7 +36,7 @@ const EmployeeView = ({ employee, setEdit }: { employee: Employee, setEdit: (val
 
             <div className="flex justify-between pt-4">
                 <Button onClick={() => push('/employees')}>Back</Button>
-                {employee && <Button variant="outline" onClick={() => setEdit(true)}>Edit Employee</Button>}
+                {/* {employee && <Button variant="outline" onClick={() => setEdit(true)}>Edit Employee</Button>} */}
             </div>
         </>
     )
