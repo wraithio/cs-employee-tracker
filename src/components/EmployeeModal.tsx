@@ -26,6 +26,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
 
 // Valid values for type: "Add" & "Edit"
 const EmployeeModal = ({
@@ -93,7 +94,8 @@ const EmployeeModal = ({
   // Date functions
   const formatDateForInput = (date: string) => {
     if (!date) return undefined;
-
+    console.log("date", date);
+    console.log(employeeToChange)
     const [year, month, day] = date.toString().split("-").map(Number);
     return new Date(year, month - 1, day);
   };
@@ -239,12 +241,33 @@ const EmployeeModal = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+             <div>
+                <p className="text-sm font-semibold">Details</p>
+                <Input value={employeeToChange.details || ""} onChange={handleEmployeeToChange}/>
+            </div>
+
+            <div>
+                <p className="text-sm font-semibold">Status</p>
+                <Select>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Status</SelectLabel>
+                            <SelectItem value="Active">Active</SelectItem>
+                            <SelectItem value="Sick">Sick</SelectItem>
+                            <SelectItem value="Out of Office">Out of Office</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
           </div>
           <div>
             <div className="mb-2 block">
               <Label>Date hired</Label>
             </div>
-            <Popover>
+            {/* <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant={"outline"}
@@ -271,7 +294,16 @@ const EmployeeModal = ({
                   initialFocus
                 />
               </PopoverContent>
-            </Popover>
+            </Popover> */}
+            <Input
+              type="date"
+              value={
+                employeeToChange.hireDate
+                  ? employeeToChange.hireDate
+                  : "Pick a date"
+              }
+              onChange={(e) => formatDateForInput(e.target.value)}
+            />
           </div>
         </div>
         <DialogFooter>

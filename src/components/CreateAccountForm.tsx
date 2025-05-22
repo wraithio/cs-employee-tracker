@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { AuthInfo } from "@/lib/interfaces/interfaces";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const CreateAccountForm = () => {
   const { push } = useRouter();
@@ -16,6 +17,7 @@ const CreateAccountForm = () => {
   const [user, setUser] = useState({ email: "", password: "" });
   const [creationError, setCreationError] = useState(false);
   const [creatingAccount, setCreatingAccount] = useState(false);
+  const [reveal, setReveal] = useState(false);
 
   const inputsFilled = user.email !== "" && user.password !== "";
 
@@ -87,14 +89,29 @@ const CreateAccountForm = () => {
         <div className="mb-2 block">
           <Label htmlFor="password">Your password</Label>
         </div>
+        <div className="relative">
+
         <Input
           id="password"
-          type="password"
+          type={reveal ? "text" : "password"}
           required
           value={user.password}
           onChange={changeUser}
           className={creationError ? "border-red-500" : ""}
-        />
+          />
+          {!reveal ?
+                  (
+                    <FaEye
+                    className="absolute top-[25%] right-3 cursor-pointer"
+                    onClick={() => setReveal(true)}
+                    />
+                  ) : (
+                    <FaEyeSlash
+                    className="absolute top-[25%] right-3 cursor-pointer"
+                    onClick={() => setReveal(false)}
+                    />
+                  ) }
+                  </div>
       </div>
       <Button
         onClick={handleCreateUser}
