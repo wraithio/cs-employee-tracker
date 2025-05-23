@@ -209,9 +209,9 @@ const EmployeeModal = ({
                     variant="outline"
                     className="text-sm cursor-pointer text-gray-600"
                   >
-                    {sortByJob === "--please select--"
-                      ? employeeToChange.jobTitle
-                      : sortByJob}
+                    {employeeToChange.jobTitle === ""
+                      ? sortByJob
+                      : employeeToChange.jobTitle}
                     {/* {sortBy === "hire-date" ? (
                                     <FaCaretDown className="ml-2" />
                                   ) : sortBy === "hire-date-reverse" ? (
@@ -219,7 +219,7 @@ const EmployeeModal = ({
                                   ) : (
                                     ""
                                   )} */}
-                    <FaCaretDown className="ml-2" />
+                    <FaCaretDown className="ml-2"/>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -241,7 +241,7 @@ const EmployeeModal = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-             <div>
+             {/* <div>
                 <p className="text-sm font-semibold">Details</p>
                 <Input value={employeeToChange.details || ""} onChange={handleEmployeeToChange}/>
             </div>
@@ -261,7 +261,7 @@ const EmployeeModal = ({
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-            </div>
+            </div> */}
           </div>
           <div>
             <div className="mb-2 block">
