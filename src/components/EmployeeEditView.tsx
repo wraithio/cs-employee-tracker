@@ -17,7 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { cn } from "@/lib/utils";
 import { CalendarIcon } from "lucide-react";
 // Import a calendar/date picker component, e.g. from 'react-date-picker' or 'react-day-picker'
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "./ui/calendar";
 import { updateEmployee } from "@/lib/services/employee-service";
 
 const EmployeeEditView = ({
@@ -122,8 +122,15 @@ const EmployeeEditView = ({
               <SelectItem value="Active" onClick={() => setStatus("Active")}>
                 Active
               </SelectItem>
-              <SelectItem value="Sick" onClick={() => setStatus("Sick")}>Sick</SelectItem>
-              <SelectItem value="Out of Office" onClick={() => setStatus("Out of Office")}>Out of Office</SelectItem>
+              <SelectItem value="Sick" onClick={() => setStatus("Sick")}>
+                Sick
+              </SelectItem>
+              <SelectItem
+                value="Out of Office"
+                onClick={() => setStatus("Out of Office")}
+              >
+                Out of Office
+              </SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

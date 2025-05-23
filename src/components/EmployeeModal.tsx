@@ -26,7 +26,15 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "./ui/dropdown-menu";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 // Valid values for type: "Add" & "Edit"
 const EmployeeModal = ({
@@ -95,7 +103,7 @@ const EmployeeModal = ({
   const formatDateForInput = (date: string) => {
     if (!date) return undefined;
     console.log("date", date);
-    console.log(employeeToChange)
+    console.log(employeeToChange);
     const [year, month, day] = date.toString().split("-").map(Number);
     return new Date(year, month - 1, day);
   };
@@ -219,7 +227,7 @@ const EmployeeModal = ({
                                   ) : (
                                     ""
                                   )} */}
-                    <FaCaretDown className="ml-2"/>
+                    <FaCaretDown className="ml-2" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -241,7 +249,7 @@ const EmployeeModal = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-             {/* <div>
+            {/* <div>
                 <p className="text-sm font-semibold">Details</p>
                 <Input value={employeeToChange.details || ""} onChange={handleEmployeeToChange}/>
             </div>
@@ -267,35 +275,7 @@ const EmployeeModal = ({
             <div className="mb-2 block">
               <Label>Date hired</Label>
             </div>
-            {/* <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !employeeToChange.hireDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon />
-                  {employeeToChange.hireDate ? (
-                    employeeToChange.hireDate
-                  ) : (
-                    <span>Pick a date</span>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={formatDateForInput(employeeToChange.hireDate)}
-                  onSelect={(e) =>
-                    handleEmployeeToChangeHireDate(formatDateFromInput(e))
-                  }
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover> */}
-            <Input
+            {/* <Input
               type="date"
               value={
                 employeeToChange.hireDate
@@ -303,7 +283,33 @@ const EmployeeModal = ({
                   : "Pick a date"
               }
               onChange={(e) => formatDateForInput(e.target.value)}
-            />
+            /> */}
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon />
+                  {employeeToChange.hireDate === ""
+                    ? "Pick a date"
+                    : new Date(employeeToChange.hireDate).toLocaleDateString()}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={formatDateForInput(employeeToChange.hireDate)}
+                  onSelect={(date) => {
+                    handleEmployeeToChangeHireDate(formatDateFromInput(date));
+                  }}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
         <DialogFooter>

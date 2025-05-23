@@ -187,8 +187,8 @@ const EmployeeTable = () => {
   useEffect(() => {
     console.log("splicing...");
     const substring = [];
-    for (let i = 0; i < sortedEmployees.length; i += 3) {
-      substring.push(sortedEmployees.slice(i, i + 3));
+    for (let i = 0; i < sortedEmployees.length; i += 10) {
+      substring.push(sortedEmployees.slice(i, i + 10));
     }
     setSplicedEmployees(substring);
     console.log("spliced", substring);
@@ -325,8 +325,8 @@ const EmployeeTable = () => {
 
       {/* Display table - Start */}
       <h3 className="text-base ms-2">
-        {`Showing ${(pageNumber - 1) * 3 + 1} - ${Math.min(
-          pageNumber * 3,
+        {`Showing ${(pageNumber - 1) * 10 + 1} - ${Math.min(
+          pageNumber * 10,
           sortedEmployees.length
         )}`}
       </h3>
@@ -384,7 +384,7 @@ const EmployeeTable = () => {
               <PaginationPrevious onClick={() => setPage(pageNumber - 1)} />
             </button>
           </PaginationItem>
-          {Array.from({ length: Math.ceil(employeeNumber / 3) }).map((_, i) => (
+          {Array.from({ length: Math.ceil(employeeNumber / 10) }).map((_, i) => (
             <PaginationItem key={i}>
               <PaginationLink
                 className={`cursor-pointer ${
@@ -399,7 +399,7 @@ const EmployeeTable = () => {
           <PaginationItem>
             <button
               className="cursor-pointer"
-              disabled={pageNumber === Math.floor(employeeNumber / 3)}
+              disabled={pageNumber === Math.floor(employeeNumber / 10)}
             >
               <PaginationNext onClick={() => setPage(pageNumber + 1)} />
             </button>
